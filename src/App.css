@@ -1,0 +1,61 @@
+.icon {
+    position: absolute;
+    width: 1.2em;
+    height: 1.2em;
+    background-size: contain;
+    cursor: pointer;
+}
+
+.popover {
+    position: absolute;
+    top: 1.4em; /* Place below the icon */
+    left: -0.8em;
+    z-index: 1000;
+    cursor: auto;
+}
+
+.popover .triangle {
+    position: relative;
+    left: 0.8em;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 .5em .5em .5em;
+    border-color: transparent transparent rgba(210,210,210,.9) transparent;
+}
+
+.popover .bubble {
+    background-color: rgba(210,210,210,.9);
+    padding: 1em;
+    min-width: 10em;
+    border-radius: .7em;
+    box-shadow: 3px 3px 4px rgba(0,0,0,.7);
+}
+
+.popover .bubble .name {
+    white-space: nowrap;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.popover .bubble .technical {
+    font-size: 0.6em;
+    padding-bottom: 0.2em;
+}
+
+.popover .bubble .currentState {
+    white-space: nowrap
+}
+
+.button {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0.4em;
+    margin: 0.2em;
+    background-image: linear-gradient(0deg, rgb(204, 204, 204), rgb(238, 238, 238));
+    border-radius: 0.3em;
+    border: 1px solid rgb(153,153,153);
+    box-shadow: 1px 1px 2px rgba(0,0,0,.7);
+    text-shadow: 0px 0px 5px #ffffff;
+    cursor: pointer;
+}

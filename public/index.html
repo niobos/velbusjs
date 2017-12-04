@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Domotica control</title>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Set,Map">
+        /* Needed for React to work on iOS7
+           Outputs an empty JS file on modern browsers
+           Can be delete if iOS7 support is not needed anymore
+         */
+    </script>
+</head>
+<body>
+<noscript>
+    You need to enable JavaScript to run this app.
+</noscript>
+<script type="text/javascript">
+      window['maps'] = [
+          {
+              'imgsrc': 'plan0.svg',
+              'controls': [
+                  {
+                      'type': 'relay', 'left': 87, 'top': 144,
+                      'name': 'light kitchen',
+                      'icon': 'light',
+                      'address': [0x1, 1],
+                  },
+                  {
+                      'type': 'relay', 'left': 230, 'top': 100,
+                      'name': 'light bedroom',
+                      'icon': 'light',
+                      'address': [0x2, 1],
+                  },
+              ],
+          },
+          {
+              'imgsrc': 'plan1.svg',
+              'controls': [
+                  {
+                      'type': 'dimmer', 'left': 332, 'top': 341,
+                      'name': 'attic fan',
+                      'icon': 'fan',
+                      'address': [0x3, 1],
+                  },
+              ],
+          },
+      ];
+</script>
+<div id="root">Loading ReactJS app...</div>
+<div id="test"></div>
+</body>
+</html>

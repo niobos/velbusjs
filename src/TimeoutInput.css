@@ -1,0 +1,11 @@
+.timeoutinput.empty {
+
+}
+
+.timeoutinput.valid {
+    background-color: #a4ffb8;
+}
+
+.timeoutinput.invalid {
+    background-color: #ffaeb0;
+}
