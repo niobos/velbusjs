@@ -130,7 +130,8 @@ class BlindControl extends PureComponent {
             }
             // Ignore response. We will also receive this over the websocket, and process it there
         });
-        put_state.open("PUT", `http://${this.props.apiHostPort}/module/${this.props.address[0].toString(16)}/${this.props.address[1]}/position`);
+        const address_hex = ("00"+this.props.address[0].toString(16)).slice(-2);
+        put_state.open("PUT", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/position`);
         put_state.send(desired_state);
     }
 

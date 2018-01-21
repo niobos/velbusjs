@@ -49,11 +49,12 @@ class Dimmer extends PureComponent {
 
         if( Object.keys(my_state).length === 0 ) {
             // No data, request update
+            const address_hex = ("00"+this.props.address[0].toString(16)).slice(-2);
             const current_state = new XMLHttpRequest();
             current_state.addEventListener("load", function (event) {
                 // Ignore response. We will also receive this over the websocket, and process it there
             });
-            current_state.open("GET", `http://${this.props.apiHostPort}/module/${this.props.address[0].toString(16)}/${this.props.address[1]}/dimvalue`);
+            current_state.open("GET", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/dimvalue`);
             current_state.send();
         }
 
@@ -99,7 +100,7 @@ class DimmerControl extends PureComponent {
             component.componentWillReceiveProps(props);
         }}(this, props), 0);
 
-        this.state = {dimvalue: 0};
+        this.state = {dimvalue: props.dimvalue};
     }
 
     componentDidMount() {
@@ -122,7 +123,8 @@ class DimmerControl extends PureComponent {
             }
             // Ignore response. We will also receive this over the websocket, and process it there
         });
-        put_state.open("PUT", `http://${this.props.apiHostPort}/module/${this.props.address[0].toString(16)}/${this.props.address[1]}/dimvalue`);
+        const address_hex = ("00"+this.props.address[0].toString(16)).slice(-2);
+        put_state.open("PUT", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/dimvalue`);
         put_state.send(desired_state);
     }
 

@@ -46,7 +46,7 @@ class App extends PureComponent {
         /* Register a listener to receive state updates
          * `cb` is called with the new state, similar to setState()
          */
-        const address_hex = address.toString(16);
+        const address_hex = ("00"+address.toString(16)).slice(-2);
         if(!(address_hex in this.ws_listeners)) {
             this.ws_listeners[address_hex] = new Set();
 
@@ -66,7 +66,7 @@ class App extends PureComponent {
         }
     }
     removeWebSocketListener(address, cb) {
-        const address_hex = address.toString(16);
+        const address_hex = ("00"+address.toString(16)).slice(-2);
         this.ws_listeners[address_hex].remove(cb);
         if(this.ws_listeners.length === 0) {
             delete this.ws_listeners[address_hex];
