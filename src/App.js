@@ -199,9 +199,7 @@ class App extends PureComponent {
                 ...controls))
         }
 
-        const appStyle = {
-            display: 'inline-block',
-        };
+        const appStyle = {};
         if( this.state.offline ) {
             appStyle.backgroundColor = '#ffd8d5';
         }
