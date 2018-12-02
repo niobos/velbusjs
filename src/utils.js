@@ -22,6 +22,10 @@ String.prototype.rsplit = function(sep, maxsplit) {
     return maxsplit ? [ split.slice(0, -maxsplit).join(sep) ].concat(split.slice(-maxsplit)) : split;
 };
 
+function address_to_hex(address) {
+    return ("00"+address.toString(16)).slice(-2);
+}
+
 function to_custom_bases(number, bases) {
     /**
      * Splits an number (int/float) in an arbitrary number of bases
@@ -116,4 +120,4 @@ function parse_duration(duration) {
 }
 
 
-export {default_value, shallow_copy, to_custom_bases, seconds_to_dhms, parse_duration};
+export {default_value, shallow_copy, address_to_hex, to_custom_bases, seconds_to_dhms, parse_duration};

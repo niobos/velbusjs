@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import './App.css';
 import FloorMap from './FloorMap.js';
-import { shallow_copy } from "./utils";
+import {address_to_hex, shallow_copy} from "./utils";
 import { applyOperation } from 'fast-json-patch'
 import Unknown from './Unknown.js';
 import Relay from './Relay.js';
@@ -46,13 +46,13 @@ class App extends PureComponent {
         /* Register a listener to receive state updates
          * `cb` is called with the new state, similar to setState()
          */
-        const address_hex = ("00"+address.toString(16)).slice(-2);
+        const address_hex = address_to_hex(address);
         if(!(address_hex in this.ws_listeners)) {
             this.ws_listeners[address_hex] = new Set();
 
             if(this.web_socket && this.web_socket.readyState === WebSocket.OPEN) {
                 this.web_socket.send(JSON.stringify([{
-                    'op': 'add', 'path': '/' + address_hex,
+                    'op': 'add', 'path': `/${address_hex}`,
                     'value': true
                 }]));
             }
@@ -66,14 +66,14 @@ class App extends PureComponent {
         }
     }
     removeWebSocketListener(address, cb) {
-        const address_hex = ("00"+address.toString(16)).slice(-2);
+        const address_hex = address_to_hex(address);
         this.ws_listeners[address_hex].remove(cb);
         if(this.ws_listeners.length === 0) {
             delete this.ws_listeners[address_hex];
 
             if(this.web_socket && this.web_socket.readyState === WebSocket.OPEN) {
                 this.web_socket.send(JSON.stringify([{
-                    'op': 'remove', 'path': '/' + address_hex,
+                    'op': 'remove', 'path': `/${address_hex}`,
                 }]));
             }
             // else: nothing to delete anyway
@@ -104,7 +104,7 @@ class App extends PureComponent {
                 for (let address_hex in app.ws_listeners) {
                     subscriptions.push(address_hex);
                     register_ops.push({
-                        'op': 'add', 'path': '/' + address_hex,
+                        'op': 'add', 'path': `/${address_hex}`,
                         'value': true
                     });
                 }
@@ -120,8 +120,10 @@ class App extends PureComponent {
                 for (let i in event_obj) {
                     const operation = event_obj[i];
                     // ^^^ (let operation of event_obj) fails on iOS7
+
                     const address_hex = operation.path.split('/')[1];
                     changed_addresses_hex.add(address_hex);
+
                     applyOperation(app.ws_state, operation);
                 }
                 for (let address_hex of changed_addresses_hex) {
@@ -136,6 +138,8 @@ class App extends PureComponent {
             return function (event) {
                 app.setState({offline: true});
                 console.log("WS closed");
+
+                // Reconnect with exponential backoff
                 setTimeout(function() { app.connectWebsocket(); }, app.ws_timeout);
                 app.ws_timeout = Math.min(app.ws_timeout * 2, 5000);
             }

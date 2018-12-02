@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import './Unknown.css';
+import {address_to_hex} from "./utils";
 
 
 /**
@@ -33,7 +34,7 @@ class UnknownControl extends PureComponent {
             <div className='bubble'>
                 <div className='name'>{this.props.name}</div>
                 <div className='technical'>
-                    Unknown @ 0x{this.props.address[0].toString(16)} {this.props.address.slice(1)}
+                    Unknown @ 0x{address_to_hex(this.props.address[0])} {this.props.address.slice(1)}
                 </div>
             </div>
         </div>);

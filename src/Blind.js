@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import './Blind.css';
 import TimeoutInput from './TimeoutInput.js';
-import {default_value, seconds_to_dhms} from "./utils";
+import {address_to_hex, default_value, seconds_to_dhms} from "./utils";
 import Range from "./Range";
 
 /**
@@ -58,7 +58,8 @@ class Blind extends PureComponent {
             current_state.addEventListener("load", function (event) {
                 // Ignore response. We will also receive this over the websocket, and process it there
             });
-            current_state.open("GET", `http://${this.props.apiHostPort}/module/${this.props.address[0].toString(16)}/${this.props.address[1]}/position`);
+            const address_hex = address_to_hex(this.props.address[0]);
+            current_state.open("GET", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/position`);
             current_state.send();
         }
 
@@ -130,7 +131,7 @@ class BlindControl extends PureComponent {
             }
             // Ignore response. We will also receive this over the websocket, and process it there
         });
-        const address_hex = ("00"+this.props.address[0].toString(16)).slice(-2);
+        const address_hex = address_to_hex(this.props.address[0]);
         put_state.open("PUT", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/position`);
         put_state.send(desired_state);
     }
@@ -158,7 +159,7 @@ class BlindControl extends PureComponent {
             <div className='bubble'>
                 <div className='name'>{this.props.name}</div>
                 <div className='technical'>
-                    Blind @ 0x{this.props.address[0].toString(16)}-{this.props.address[1]}
+                    Blind @ 0x{address_to_hex(this.props.address[0])}-{this.props.address[1]}
                 </div>
                 <div className='currentState'>
                     Current state: {current_state}

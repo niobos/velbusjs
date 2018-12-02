@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import './Relay.css';
 import TimeoutInput from './TimeoutInput.js';
-import {default_value, seconds_to_dhms} from "./utils";
+import {address_to_hex, default_value, seconds_to_dhms} from "./utils";
 
 /**
  * Required props:
@@ -53,7 +53,8 @@ class Relay extends PureComponent {
             current_state.addEventListener("load", function (event) {
                 // Ignore response. We will also receive this over the websocket, and process it there
             });
-            current_state.open("GET", `http://${this.props.apiHostPort}/module/${this.props.address[0].toString(16)}/${this.props.address[1]}/relay`);
+            const address_hex = address_to_hex(this.props.address[0]);
+            current_state.open("GET", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/relay`);
             current_state.send();
         }
 
@@ -154,7 +155,7 @@ class RelayControl extends PureComponent {
             }
             // Ignore response. We will also receive this over the websocket, and process it there
         });
-        const address_hex = ("00"+this.props.address[0].toString(16)).slice(-2);
+        const address_hex = address_to_hex(this.props.address[0]);
         put_state.open("PUT", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/relay`);
         put_state.send(JSON.stringify(desired_state));
     }
@@ -165,7 +166,7 @@ class RelayControl extends PureComponent {
             <div className='bubble'>
                 <div className='name'>{this.props.name}</div>
                 <div className='technical'>
-                    Relay @ 0x{this.props.address[0].toString(16)}-{this.props.address[1]}
+                    Relay @ 0x{address_to_hex(this.props.address[0])}-{this.props.address[1]}
                 </div>
                 <div className='currentState'>
                     Current state: {this.state.relay}

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import './Dimmer.css';
-import {default_value} from "./utils";
+import {address_to_hex, default_value} from "./utils";
 import Range from "./Range";
 
 /**
@@ -49,7 +49,7 @@ class Dimmer extends PureComponent {
 
         if( Object.keys(my_state).length === 0 ) {
             // No data, request update
-            const address_hex = ("00"+this.props.address[0].toString(16)).slice(-2);
+            const address_hex = address_to_hex(this.props.address[0]);
             const current_state = new XMLHttpRequest();
             current_state.addEventListener("load", function (event) {
                 // Ignore response. We will also receive this over the websocket, and process it there
@@ -123,7 +123,7 @@ class DimmerControl extends PureComponent {
             }
             // Ignore response. We will also receive this over the websocket, and process it there
         });
-        const address_hex = ("00"+this.props.address[0].toString(16)).slice(-2);
+        const address_hex = address_to_hex(this.props.address[0]);
         put_state.open("PUT", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/dimvalue`);
         put_state.send(desired_state);
     }
@@ -134,7 +134,7 @@ class DimmerControl extends PureComponent {
             <div className='bubble'>
                 <div className='name'>{this.props.name}</div>
                 <div className='technical'>
-                    Dimmer @ 0x{this.props.address[0].toString(16)}-{this.props.address[1]}
+                    Dimmer @ 0x{address_to_hex(this.props.address[0])}-{this.props.address[1]}
                 </div>
                 <div className='currentState'>
                     Current state: {this.props.dimvalue}%
