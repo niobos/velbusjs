@@ -169,11 +169,11 @@ class App extends PureComponent {
 
     render() {
         const children = [];
-        for(let index in window.maps) {
-            const map = window.maps[index];
+        for(let mindex in window.maps) {
+            const map = window.maps[mindex];
 
             let active_subelement = null;
-            if( this.state.activeElement !== null && this.state.activeElement[0] === index) {
+            if( this.state.activeElement !== null && this.state.activeElement[0] === mindex) {
                 active_subelement = this.state.activeElement.slice(1);
             }
 
@@ -197,7 +197,7 @@ class App extends PureComponent {
                 {
                     imgsrc: map['imgsrc'],
                     activeElement: active_subelement,
-                    onActivate: (event, subindices=[]) => this.activateChild(event, index, subindices),
+                    onActivate: (event, subindices=[]) => this.activateChild(event, mindex, subindices),
                     apiHostPort: this.apiHostPort,
                 },
                 ...controls))
