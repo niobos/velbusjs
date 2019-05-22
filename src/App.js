@@ -169,8 +169,9 @@ class App extends PureComponent {
 
     render() {
         const children = [];
-        for(let mindex in window.maps) {
-            const map = window.maps[mindex];
+        for(let mindex in window.config['maps']) {
+            const mindex_int = parseInt(mindex);  // object keys are strings
+            const map = window.config['maps'][mindex];
 
             let active_subelement = null;
             if( this.state.activeElement !== null && this.state.activeElement[0] === mindex) {
@@ -178,24 +179,32 @@ class App extends PureComponent {
             }
 
             const controls = [];
-            for(let cindex in map['controls']) {
-                const control = map['controls'][cindex];
-                const props = shallow_copy(control);
-                props['addWebSocketListener'] = this.addWebSocketListener.bind(this);
-                props['removeWebSocketListener'] = this.removeWebSocketListener.bind(this);
-                props['apiHostPort'] = this.apiHostPort;
+            for(let cindex in window.config['controls']) {
+                const control = window.config['controls'][cindex];
+                for (let pindex in control['positions']) {
+                    const position = control['positions'][pindex];
+                    if (position['map'] !== mindex_int) continue;
 
-                let component = control_components[control['type']];
-                if( component === undefined ) {
-                    component = Unknown;
+                    const props = shallow_copy(control);
+                    props['name'] = cindex;
+                    props['left'] = position['left'];
+                    props['top'] = position['top'];
+                    props['addWebSocketListener'] = this.addWebSocketListener.bind(this);
+                    props['removeWebSocketListener'] = this.removeWebSocketListener.bind(this);
+                    props['apiHostPort'] = this.apiHostPort;
+
+                    let component = control_components[control['type']];
+                    if (component === undefined) {
+                        component = Unknown;
+                    }
+                    controls.push(React.createElement(component, props, null));
                 }
-                controls.push(React.createElement(component, props, null));
             }
 
             children.push(React.createElement(
                 FloorMap,
                 {
-                    imgsrc: map['imgsrc'],
+                    imgsrc: map,
                     activeElement: active_subelement,
                     onActivate: (event, subindices=[]) => this.activateChild(event, mindex, subindices),
                     apiHostPort: this.apiHostPort,
@@ -208,7 +217,7 @@ class App extends PureComponent {
             appStyle.backgroundColor = '#ffd8d5';
         }
 
-        return <div style={appStyle}>{children}</div>;
+        return (<div style={appStyle}>{children}</div>);
     }
 }
 

@@ -1,0 +1,32 @@
+---
+maps:
+  - plan0.svg
+  - plan1.svg
+
+controls:
+  light kitchen:
+    type: relay
+    address: [0x01, 1]
+    icon: light
+    positions:
+      - map: 0
+        left: 87
+        top: 144
+
+  light bedroom:
+    type: relay
+    address: [0x02, 1]
+    icon: light
+    positions:
+      - map: 0
+        left: 230
+        top: 100
+
+  attic fan:
+    type: dimmer
+    address: [0x03, 1]
+    icon: fan
+    positions:
+      - map: 1
+        left: 332
+        top: 341
