@@ -22,7 +22,9 @@ class Relay extends PureComponent {
         this.state = {
             relay: false,
         };
-        if( this.props.address.length !== 2 ||
+        if( !('address' in this.props) ||
+            !('length' in this.props.address) ||
+            this.props.address.length !== 2 ||
             this.props.address[1] < 1 ||
             this.props.address[1] > 5
         ) {
