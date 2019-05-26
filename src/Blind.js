@@ -3,6 +3,7 @@ import './Blind.css';
 import TimeoutInput from './TimeoutInput.js';
 import {address_to_hex, default_value, seconds_to_dhms} from "./utils";
 import Range from "./Range";
+import Control from "./Control";
 
 /**
  * Required props:
@@ -20,7 +21,7 @@ import Range from "./Range";
  *           name defaults to 'blind'
  *           extension defaults to 'svg'
  */
-class Blind extends PureComponent {
+class Blind extends Control {
     constructor(props) {
         super(props);
         this.state = {
@@ -76,6 +77,31 @@ class Blind extends PureComponent {
         this.props.removeWebSocketListener(this.props.address[0], this.web_socket_message.bind(this));
     }
 
+    changePosition(desired_state) {
+        const put_state = new XMLHttpRequest();
+        put_state.addEventListener("load", function (event) {
+            if( this.status !== 200 ) {
+                console.log("PUT call failed:");
+                console.log(this);
+                console.log(event);
+            }
+            // Ignore response. We will also receive this over the websocket, and process it there
+        });
+        const address_hex = address_to_hex(this.props.address[0]);
+        put_state.open("PUT", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/position`);
+        put_state.send(desired_state);
+    }
+
+    allBlindsDown() {
+        super.allBlindsDown();
+        this.changePosition('down');
+    }
+
+    allBlindsUp() {
+        super.allBlindsUp();
+        this.changePosition('up');
+    }
+
     render() {
         let blind_state;
         if( this.state.status === 'up' ) {
@@ -100,7 +126,7 @@ class Blind extends PureComponent {
 
         return (<div onClick={this.props.onActivate} className="icon" style={s}>
             {this.props.activeElement !== null
-                ? <BlindControl {...this.state} {...this.props}/>
+                ? <BlindControl {...this.state} {...this.props} changePosition={this.changePosition.bind(this)}/>
                 : null}
         </div>);
     }
@@ -123,35 +149,19 @@ class BlindControl extends PureComponent {
     componentWillReceiveProps(nextProps) {
     }
 
-    changePosition(desired_state, event) {
-        const put_state = new XMLHttpRequest();
-        put_state.addEventListener("load", function (event) {
-            if( this.status !== 200 ) {
-                console.log("PUT call failed:");
-                console.log(this);
-                console.log(event);
-            }
-            // Ignore response. We will also receive this over the websocket, and process it there
-        });
-        const address_hex = address_to_hex(this.props.address[0]);
-        put_state.open("PUT", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/position`);
-        put_state.send(desired_state);
-    }
-
-
     render() {
         let buttons;
         let current_state;
 
         if( this.props.status === 'off' ) {
             buttons = [
-                <div className='button' onClick={this.changePosition.bind(this, 'up')}>↑</div>,
-                <div className='button' onClick={this.changePosition.bind(this, 'down')}>↓</div>,
+                <div className='button' onClick={this.props.changePosition.bind(this, 'up')}>↑</div>,
+                <div className='button' onClick={this.props.changePosition.bind(this, 'down')}>↓</div>,
             ];
             current_state = Math.round(this.props.position) + '% down';
         } else {
             buttons = [
-                <div className='button' onClick={this.changePosition.bind(this, 'stop')}>■</div>,
+                <div className='button' onClick={this.props.changePosition.bind(this, 'stop')}>■</div>,
             ];
             current_state = 'moving ' + this.props.status;
         }
@@ -170,7 +180,7 @@ class BlindControl extends PureComponent {
                     {buttons}
                     <Range value={this.props.position}
                            suffix='%'
-                           onChange={this.changePosition.bind(this)}
+                           onChange={this.props.changePosition.bind(this)}
                            />
                 </div>
             </div>

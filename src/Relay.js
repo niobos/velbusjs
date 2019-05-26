@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import './Relay.css';
 import TimeoutInput from './TimeoutInput.js';
 import {address_to_hex, default_value, seconds_to_dhms} from "./utils";
+import Control from "./Control";
 
 /**
  * Required props:
@@ -16,7 +17,7 @@ import {address_to_hex, default_value, seconds_to_dhms} from "./utils";
  *           state is: on, off, timer
  *           extension defaults to 'svg'
  */
-class Relay extends PureComponent {
+class Relay extends Control {
     constructor(props) {
         super(props);
         this.state = {
@@ -71,6 +72,28 @@ class Relay extends PureComponent {
         this.props.removeWebSocketListener(this.props.address[0], this.web_socket_message.bind(this));
     }
 
+    setRelay(desired_state) {
+        const put_state = new XMLHttpRequest();
+        put_state.addEventListener("load", function (event) {
+            if( this.status !== 200 ) {
+                console.log("PUT call failed:");
+                console.log(this);
+                console.log(event);
+            }
+            // Ignore response. We will also receive this over the websocket, and process it there
+        });
+        const address_hex = address_to_hex(this.props.address[0]);
+        put_state.open("PUT", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/relay`);
+        put_state.send(JSON.stringify(desired_state));
+    }
+
+    allLightsOff() {
+        super.allLightsOff();
+        if( this.iconset === "light" ) {
+            this.setRelay(false);
+        }
+    }
+
     render() {
         let relay_state;
         if( typeof this.state.relay === 'boolean' ) {
@@ -87,7 +110,7 @@ class Relay extends PureComponent {
 
         return (<div onClick={this.props.onActivate} className="icon" style={s}>
             {this.props.activeElement !== null
-                ? <RelayControl {...this.state} {...this.props}/>
+                ? <RelayControl {...this.state} {...this.props} setRelay={this.setRelay.bind(this)}/>
                 : null}
         </div>);
     }
@@ -140,26 +163,12 @@ class RelayControl extends PureComponent {
         this.setState({desired_timeout: timeout});
     }
 
-    switch_relay(event) {
-        let desired_state;
+    switchRelay(event) {
         if( this.state.desired_timeout !== null ) {
-            desired_state = this.state.desired_timeout;
+            this.props.setRelay(this.state.desired_timeout);
         } else {
-            desired_state = !this.props.relay;
+            this.props.setRelay(!this.props.relay);
         }
-
-        const put_state = new XMLHttpRequest();
-        put_state.addEventListener("load", function (event) {
-            if( this.status !== 200 ) {
-                console.log("PUT call failed:");
-                console.log(this);
-                console.log(event);
-            }
-            // Ignore response. We will also receive this over the websocket, and process it there
-        });
-        const address_hex = address_to_hex(this.props.address[0]);
-        put_state.open("PUT", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/relay`);
-        put_state.send(JSON.stringify(desired_state));
     }
 
     render() {
@@ -174,7 +183,7 @@ class RelayControl extends PureComponent {
                     Current state: {this.state.relay}
                 </div>
                 <div style={{display: 'table'}}>
-                    <div className='button' onClick={this.switch_relay.bind(this)}>
+                    <div className='button' onClick={this.switchRelay.bind(this)}>
                         {this.props.relay ? 'OFF' : 'ON'}
                     </div>
                     <div style={{marginLeft: '0.5em', whiteSpace: 'nowrap'}}>

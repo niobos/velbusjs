@@ -24,6 +24,7 @@ class App extends PureComponent {
         };
         this.ws_listeners = {};
         this.ws_state = {};
+        this.control_elements = [];
 
         if(this.props.apiHostPort) {
             this.apiHostPort = this.props.apiHostPort;
@@ -167,6 +168,24 @@ class App extends PureComponent {
         this.web_socket.close();
     }
 
+    allLightsOff() {
+        this.control_elements.forEach(control => {
+            control.allLightsOff()
+        });
+    }
+
+    allBlindsUp() {
+        this.control_elements.forEach(control => {
+            control.allBlindsUp();
+        });
+    }
+
+    allBlindsDown() {
+        this.control_elements.forEach(control => {
+            control.allBlindsDown();
+        });
+    }
+
     render() {
         const children = [];
         for(let mindex in window.config['maps']) {
@@ -197,7 +216,9 @@ class App extends PureComponent {
                     if (component === undefined) {
                         component = Unknown;
                     }
-                    controls.push(React.createElement(component, props, null));
+                    const react_element = React.createElement(component, props, null)
+                    this.control_elements.push(react_element);
+                    controls.push(react_element);
                 }
             }
 
@@ -217,7 +238,16 @@ class App extends PureComponent {
             appStyle.backgroundColor = '#ffd8d5';
         }
 
-        return (<div style={appStyle}>{children}</div>);
+        return (
+            <div style={appStyle}>
+                {children}
+                <div class="buttons">
+                    <input type="button" value="All lights off" onClick={this.allLightsOff.bind(this)}/>
+                    <input type="button" value="All blinds up" onClick={this.allBlindsUp.bind(this)}/>
+                    <input type="button" value="All blinds down" onClick={this.allBlindsDown.bind(this)}/>
+                </div>
+            </div>
+        );
     }
 }
 

@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import './Dimmer.css';
 import {address_to_hex, default_value} from "./utils";
 import Range from "./Range";
+import Control from "./Control";
 
 /**
  * Required props:
@@ -16,7 +17,7 @@ import Range from "./Range";
  *           state is: off, dimmed, on
  *           extension defaults to 'svg'
  */
-class Dimmer extends PureComponent {
+class Dimmer extends Control {
     constructor(props) {
         super(props);
         this.state = {
@@ -71,6 +72,28 @@ class Dimmer extends PureComponent {
         this.props.removeWebSocketListener(this.props.address[0], this.web_socket_message.bind(this));
     }
 
+    changeDimvalue(desired_state) {
+        const put_state = new XMLHttpRequest();
+        put_state.addEventListener("load", function (event) {
+            if( this.status !== 200 ) {
+                console.log("PUT call failed:");
+                console.log(this);
+                console.log(event);
+            }
+            // Ignore response. We will also receive this over the websocket, and process it there
+        });
+        const address_hex = address_to_hex(this.props.address[0]);
+        put_state.open("PUT", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/dimvalue`);
+        put_state.send(desired_state);
+    }
+
+    allLightsOff() {
+        super.allLightsOff();
+        if( this.iconset === "light" ) {
+            this.changeDimvalue(0);
+        }
+    }
+
     render() {
         let dimmer_state;
         if( this.state.dimvalue === 0 ) {
@@ -89,7 +112,7 @@ class Dimmer extends PureComponent {
 
         return (<div onClick={this.props.onActivate} className="icon" style={s}>
             {this.props.activeElement !== null
-                ? <DimmerControl {...this.state} {...this.props}/>
+                ? <DimmerControl {...this.state} {...this.props} changeDimvalue={this.changeDimvalue.bind(this)}/>
                 : null}
         </div>);
     }
@@ -115,21 +138,6 @@ class DimmerControl extends PureComponent {
         this.setState({dimvalue: nextProps.dimvalue});
     }
 
-    changeDimvalue(desired_state) {
-        const put_state = new XMLHttpRequest();
-        put_state.addEventListener("load", function (event) {
-            if( this.status !== 200 ) {
-                console.log("PUT call failed:");
-                console.log(this);
-                console.log(event);
-            }
-            // Ignore response. We will also receive this over the websocket, and process it there
-        });
-        const address_hex = address_to_hex(this.props.address[0]);
-        put_state.open("PUT", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/dimvalue`);
-        put_state.send(desired_state);
-    }
-
     render() {
         return (<div className='popover'>
             <div className='triangle'/>
@@ -143,7 +151,7 @@ class DimmerControl extends PureComponent {
                 </div>
                 <Range value={this.state.dimvalue}
                        suffix='%'
-                       onChange={this.changeDimvalue.bind(this)}
+                       onChange={this.props.changeDimvalue.bind(this)}
                        />
             </div>
         </div>);
