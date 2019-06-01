@@ -3,7 +3,6 @@ import './Blind.css';
 import TimeoutInput from './TimeoutInput.js';
 import {address_to_hex, default_value, seconds_to_dhms} from "./utils";
 import Range from "./Range";
-import Control from "./Control";
 
 /**
  * Required props:
@@ -21,7 +20,7 @@ import Control from "./Control";
  *           name defaults to 'blind'
  *           extension defaults to 'svg'
  */
-class Blind extends Control {
+class Blind extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -42,6 +41,9 @@ class Blind extends Control {
         if( icon.length === 1 ) icon.push('svg');
         this.iconset = icon[0];
         this.extension = icon[1];
+
+        const self = this;  // create closure
+        this.props.registerAllBlinds(function(state) { self.changePosition(state); })
     }
 
     web_socket_message(new_state) {
@@ -90,16 +92,6 @@ class Blind extends Control {
         const address_hex = address_to_hex(this.props.address[0]);
         put_state.open("PUT", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/position`);
         put_state.send(desired_state);
-    }
-
-    allBlindsDown() {
-        super.allBlindsDown();
-        this.changePosition('down');
-    }
-
-    allBlindsUp() {
-        super.allBlindsUp();
-        this.changePosition('up');
     }
 
     render() {

@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import './Dimmer.css';
 import {address_to_hex, default_value} from "./utils";
 import Range from "./Range";
-import Control from "./Control";
 
 /**
  * Required props:
@@ -17,7 +16,7 @@ import Control from "./Control";
  *           state is: off, dimmed, on
  *           extension defaults to 'svg'
  */
-class Dimmer extends Control {
+class Dimmer extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -37,6 +36,11 @@ class Dimmer extends Control {
         if( icon.length === 1 ) icon.push('svg');
         this.iconset = icon[0];
         this.extension = icon[1];
+
+        if( this.iconset === 'light' ) {
+            const self = this;  // create closure
+            this.props.registerAllLights(function(state) { self.setRelay(state ? 100 : 0); })
+        }
     }
 
     web_socket_message(new_state) {
@@ -85,13 +89,6 @@ class Dimmer extends Control {
         const address_hex = address_to_hex(this.props.address[0]);
         put_state.open("PUT", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/dimvalue`);
         put_state.send(desired_state);
-    }
-
-    allLightsOff() {
-        super.allLightsOff();
-        if( this.iconset === "light" ) {
-            this.changeDimvalue(0);
-        }
     }
 
     render() {

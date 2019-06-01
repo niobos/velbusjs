@@ -31,6 +31,9 @@ class App extends PureComponent {
         } else {
             this.apiHostPort = `${document.domain}:${window.location.port}`
         }
+
+        this.allLights = [];
+        this.allBlinds = [];
     }
 
     activateChild(event, index, subindices=[]) {
@@ -168,28 +171,36 @@ class App extends PureComponent {
         this.web_socket.close();
     }
 
+    registerAllLights(cb) {
+        this.allLights.append(cb);
+    }
+
     allLightsOff() {
-        this.control_elements.forEach(control => {
-            control.allLightsOff()
+        this.allLights.forEach(control => {
+            control(false);
         });
     }
 
+    registerAllBlinds(cb) {
+        this.allBlinds.append(cb);
+    }
+
     allBlindsUp() {
-        this.control_elements.forEach(control => {
-            control.allBlindsUp();
+        this.allBlinds.forEach(control => {
+            control('up');
         });
     }
 
     allBlindsDown() {
-        this.control_elements.forEach(control => {
-            control.allBlindsDown();
+        this.allBlinds.forEach(control => {
+            control('down');
         });
     }
 
     render() {
         const children = [];
         for(let mindex in window.config['maps']) {
-            const mindex_int = parseInt(mindex);  // object keys are strings
+            const mindex_int = parseInt(mindex, 10);  // object keys are strings
             const map = window.config['maps'][mindex];
 
             let active_subelement = null;
@@ -211,6 +222,8 @@ class App extends PureComponent {
                     props['addWebSocketListener'] = this.addWebSocketListener.bind(this);
                     props['removeWebSocketListener'] = this.removeWebSocketListener.bind(this);
                     props['apiHostPort'] = this.apiHostPort;
+                    props['registerAllLights'] = this.allLights.bind(this);
+                    props['registerAllBlinds'] = this.allBlinds.bind(this);
 
                     let component = control_components[control['type']];
                     if (component === undefined) {

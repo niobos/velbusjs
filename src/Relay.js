@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import './Relay.css';
 import TimeoutInput from './TimeoutInput.js';
 import {address_to_hex, default_value, seconds_to_dhms} from "./utils";
-import Control from "./Control";
 
 /**
  * Required props:
@@ -17,7 +16,7 @@ import Control from "./Control";
  *           state is: on, off, timer
  *           extension defaults to 'svg'
  */
-class Relay extends Control {
+class Relay extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -37,6 +36,11 @@ class Relay extends Control {
         if( icon.length === 1 ) icon.push('svg');
         this.iconset = icon[0];
         this.extension = icon[1];
+
+        if( this.iconset === 'light' ) {
+            const self = this;  // create closure
+            this.props.registerAllLights(function(state) { self.setRelay(state); })
+        }
     }
 
     web_socket_message(new_state) {
@@ -85,13 +89,6 @@ class Relay extends Control {
         const address_hex = address_to_hex(this.props.address[0]);
         put_state.open("PUT", `http://${this.props.apiHostPort}/module/${address_hex}/${this.props.address[1]}/relay`);
         put_state.send(JSON.stringify(desired_state));
-    }
-
-    allLightsOff() {
-        super.allLightsOff();
-        if( this.iconset === "light" ) {
-            this.setRelay(false);
-        }
     }
 
     render() {
