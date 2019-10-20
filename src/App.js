@@ -152,10 +152,9 @@ class App extends PureComponent {
         server_timestamp_xhr.addEventListener("load", function (event) {
             const end_timestamp = new Date();
             const average_timestamp = start_timestamp / 2 + end_timestamp / 2;
-            const average_utc_timestamp = average_timestamp + end_timestamp.getTimezoneOffset() * 60000
             const server_timestamp = parseFloat(this.responseText);
-            window.my_time_offset_ms = Math.round(average_utc_timestamp - server_timestamp*1000);
-            console.log(`Time calibration: my time: ${average_utc_timestamp}, server time: ${server_timestamp}; my offset: ${window.my_time_offset_ms} ms ahead`);
+            window.my_time_offset_ms = Math.round(average_timestamp - server_timestamp*1000);
+            console.log(`Time calibration: my time: ${average_timestamp}, server time: ${server_timestamp}; my offset: ${window.my_time_offset_ms} ms ahead`);
         });
         server_timestamp_xhr.open("GET", `http://${this.apiHostPort}/timestamp`);
         server_timestamp_xhr.send();
