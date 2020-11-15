@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import './Dimmer.css';
-import {address_to_hex, default_value} from "./utils";
+import {address_to_hex, default_value, seconds_to_dhms} from "./utils";
 import Range from "./Range";
 
 /**
@@ -98,6 +98,7 @@ class Dimmer extends PureComponent {
 class DimmerControl extends PureComponent {
     constructor(props) {
         super(props);
+        this.update_timer = null;
         setTimeout(function(component, props) { return function(){
             component.componentWillReceiveProps(props);
         }}(this, props), 0);
@@ -106,13 +107,31 @@ class DimmerControl extends PureComponent {
     }
 
     componentDidMount() {
+        this.update_timer = setInterval(function() {
+            this.updateTimer();
+        }.bind(this), 1000);
     }
 
     componentWillUnmount() {
+        if( this.update_timer ) {
+            clearInterval(this.update_timer);
+        }
+    }
+
+    updateTimer() {
+        const now_secs = (new Date() - window.my_time_offset_ms) / 1000.;
+
+        if( 'last_change' in this.props && this.props.last_change !== null ) {
+            const since_secs_ago = now_secs - this.props.last_change;
+            this.setState({since: seconds_to_dhms(since_secs_ago) + ' ago'});
+        } else {
+            this.setState({since: 'unknown'});
+        }
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({dimvalue: nextProps.dimvalue});
+        this.updateTimer();
     }
 
     changeDimvalue(desired_state) {
@@ -140,6 +159,9 @@ class DimmerControl extends PureComponent {
                 </div>
                 <div className='currentState'>
                     Current state: {this.props.dimvalue}%
+                </div>
+                <div className='since'>
+                    Since: {this.state.since}
                 </div>
                 <Range value={this.state.dimvalue}
                        suffix='%'
