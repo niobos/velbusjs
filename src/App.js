@@ -7,12 +7,14 @@ import Unknown from './Unknown.js';
 import Relay from './Relay.js';
 import Dimmer from './Dimmer.js';
 import Blind from './Blind.js';
+import Input from './Input.js';
 
 
 const control_components = {
     'relay': Relay,
     'dimmer': Dimmer,
     'blind': Blind,
+    'input': Input,
 };
 
 class App extends PureComponent {
