@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import './Relay.css';
 import TimeoutInput from './TimeoutInput.js';
 import {address_to_hex, default_value, seconds_to_dhms} from "./utils";
+import Timer from "./Timer";
 
 /**
  * Required props:
@@ -96,50 +97,15 @@ class Relay extends PureComponent {
 class RelayControl extends PureComponent {
     constructor(props) {
         super(props);
-        this.update_timer = null;
         this.state = {
             desired_timeout: null,
         };
-        setTimeout(function(component, props) { return function(){
-            component.componentWillReceiveProps(props);
-        }}(this, props), 0);
     }
 
     componentDidMount() {
-        this.update_timer = setInterval(function() {
-            this.updateTimer();
-        }.bind(this), 1000);
     }
 
     componentWillUnmount() {
-        if( this.update_timer ) {
-            clearInterval(this.update_timer);
-        }
-    }
-
-    updateTimer() {
-        const now_secs = (new Date() - window.my_time_offset_ms) / 1000.;
-        if( typeof this.props.relay === 'boolean' ) {
-            this.setState({relay: this.props.relay ? 'on' : 'off'});
-        } else if( typeof this.props.relay === 'number' ) {
-            const timeout_at_secs = this.props.relay;
-            const timeout_in_secs = timeout_at_secs - now_secs;
-            this.setState({relay: 'on for ' + seconds_to_dhms(timeout_in_secs)});
-        } else {
-            console.error("unknown format for relay prop:");
-            console.error(this.props.relay);
-        }
-
-        if( 'last_change' in this.props && this.props.last_change !== null ) {
-            const since_secs_ago = now_secs - this.props.last_change;
-            this.setState({since: seconds_to_dhms(since_secs_ago) + ' ago'});
-        } else {
-            this.setState({since: 'unknown'});
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.updateTimer();  // update now, don't wait for the next tick to happen
     }
 
     changeTimeout(timeout) {
@@ -169,6 +135,20 @@ class RelayControl extends PureComponent {
     }
 
     render() {
+        let current_state;
+        if( typeof this.props.relay === 'boolean' ) {
+            current_state = this.props.relay ? 'on' : 'off';
+        } else if( typeof this.props.relay === 'number' ) {
+            current_state = <span>on for <Timer direction="down" timestamp={this.props.relay + window.my_time_offset_ms/1000.} /></span>;
+        }
+
+        let since;
+        if( 'last_change' in this.props && this.props.last_change !== null ) {
+            since = <Timer direction="up" timestamp={this.props.last_change + window.my_time_offset_ms/1000.}/>;
+        } else {
+            since = 'unknown';
+        }
+
         return (<div className='popover'>
             <div className='triangle'/>
             <div className='bubble'>
@@ -177,10 +157,10 @@ class RelayControl extends PureComponent {
                     Relay @ 0x{address_to_hex(this.props.address[0])}-{this.props.address[1]}
                 </div>
                 <div className='currentState'>
-                    Current state: {this.state.relay}
+                    Current state: {current_state}
                 </div>
                 <div className='since'>
-                    Since: {this.state.since}
+                    Since: {since}
                 </div>
                 <div style={{display: 'table'}}>
                     <div className='button' onClick={this.switch_relay.bind(this)}>
