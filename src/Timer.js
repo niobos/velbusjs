@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import './Timer.css';
 import {seconds_to_dhms} from "./utils";
 
@@ -44,7 +44,8 @@ class Timer extends PureComponent {
     }
 
     render() {
-        return this.state.time;
+        const abs_time = new Date(this.props.timestamp * 1000.);
+        return <span title={abs_time.toLocaleString()}>{this.state.time}</span>;
     }
 }
 
