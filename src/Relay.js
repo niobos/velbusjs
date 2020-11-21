@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import './Relay.css';
 import TimeoutInput from './TimeoutInput.js';
-import {address_to_hex, default_value, seconds_to_dhms} from "./utils";
+import {address_to_hex, default_value} from "./utils";
 import Timer from "./Timer";
 
 /**
