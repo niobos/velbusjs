@@ -32,6 +32,32 @@ class App extends PureComponent {
         } else {
             this.apiHostPort = `${document.domain}:${window.location.port}`
         }
+
+        this.controls = [];
+        for(let mindex in window.config['maps']) {
+            this.controls.push([]);
+        }
+
+        for(let cindex in window.config['controls']) {
+            const control = window.config['controls'][cindex];
+            for (let pindex in control['positions']) {
+                const position = control['positions'][pindex];
+
+                const props = shallow_copy(control);
+                props['name'] = cindex;
+                props['left'] = position['left'];
+                props['top'] = position['top'];
+                props['addWebSocketListener'] = this.addWebSocketListener.bind(this);
+                props['removeWebSocketListener'] = this.removeWebSocketListener.bind(this);
+                props['apiHostPort'] = this.apiHostPort;
+
+                let component = control_components[control['type']];
+                if (component === undefined) {
+                    component = Unknown;
+                }
+                this.controls[position['map']].push(React.createElement(component, props, null));
+            }
+        }
     }
 
     activateChild(event, index, subindices=[]) {
@@ -86,6 +112,11 @@ class App extends PureComponent {
         window.addEventListener('click', this.deactivateAllChildren.bind(this));
 
         this.connectWebsocket();
+    }
+    componentWillUnmount() {
+        window.removeEventListener('click', this.deactivateAllChildren.bind(this));
+
+        this.web_socket.close();
     }
 
     connectWebsocket() {
@@ -162,12 +193,6 @@ class App extends PureComponent {
         server_timestamp_xhr.send();
     }
 
-    componentWillUnmount() {
-        window.removeEventListener('click', this.deactivateAllChildren.bind(this));
-
-        this.web_socket.close();
-    }
-
     render() {
         const children = [];
         for(let mindex in window.config['maps']) {
@@ -179,29 +204,7 @@ class App extends PureComponent {
                 active_subelement = this.state.activeElement.slice(1);
             }
 
-            const controls = [];
-            for(let cindex in window.config['controls']) {
-                const control = window.config['controls'][cindex];
-                for (let pindex in control['positions']) {
-                    const position = control['positions'][pindex];
-                    if (position['map'] !== mindex_int) continue;
-
-                    const props = shallow_copy(control);
-                    props['name'] = cindex;
-                    props['left'] = position['left'];
-                    props['top'] = position['top'];
-                    props['addWebSocketListener'] = this.addWebSocketListener.bind(this);
-                    props['removeWebSocketListener'] = this.removeWebSocketListener.bind(this);
-                    props['apiHostPort'] = this.apiHostPort;
-
-                    let component = control_components[control['type']];
-                    if (component === undefined) {
-                        component = Unknown;
-                    }
-                    controls.push(React.createElement(component, props, null));
-                }
-            }
-
+            const controls = this.controls[mindex_int];
             children.push(React.createElement(
                 FloorMap,
                 {
