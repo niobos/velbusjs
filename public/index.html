@@ -20,6 +20,19 @@
     You need to enable JavaScript to run this app.
 </noscript>
 <script type="text/javascript">
+    // iOS 14 doesn't re-evaluate the media-queries inside a <picture>
+    // dirty workaroud: do a reload
+    window.matchMedia('(prefers-color-scheme: dark)')
+            .addEventListener('change', event => {
+        if (event.matches) {
+            //dark mode
+        } else {
+            //light mode
+        }
+        location.reload();
+    })
+
+    // Defaults. Should be overridden in controls.yaml
       window['maps'] = [
           {
               'imgsrc': 'plan0.svg',
