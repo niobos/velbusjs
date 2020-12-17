@@ -1,7 +1,10 @@
 ---
 maps:
   - plan0.svg
-  - plan1.svg
+  - imgsrc: plan1.svg
+    sources:
+      - media: "(prefers-color-scheme: dark)"
+        srcset: plan1.dark.svg
 
 controls:
   light kitchen:

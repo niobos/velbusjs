@@ -20,8 +20,27 @@ class FloorMap extends PureComponent {
             }
             return React.cloneElement(child, extra_props);
         });
+
+        let picture;
+        if(typeof this.props.imgsrc === "string") {
+            picture = <picture>
+                <img src={this.props.imgsrc} alt="map"/>
+            </picture>;
+        } else if (typeof this.props.imgsrc === "object") {
+            let sources = [];
+            for(let source of this.props.imgsrc.sources) {
+                sources.push(<source srcset={source.srcset} media={source.media} />);
+            }
+            picture = <picture>
+                {sources}
+                <img src={this.props.imgsrc.imgsrc} alt="map" />
+            </picture>;
+        } else {
+            throw Error("Unrecognized imgsrc type");
+        }
+
         return (<div className="floormap">
-            <img src={this.props.imgsrc} alt="map" />
+            {picture}
             {children}
         </div>);
     }
