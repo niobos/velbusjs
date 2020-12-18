@@ -5,9 +5,34 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   width="100"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (4035a4f, 2020-05-01)"
+   sodipodi:docname="partial.svg"
+   id="svg1049"
+   version="1.1"
    height="100"
-   version="1.1" >
+   width="100">
+  <sodipodi:namedview
+     inkscape:current-layer="svg1049"
+     inkscape:window-maximized="0"
+     inkscape:window-y="23"
+     inkscape:window-x="0"
+     inkscape:cy="50"
+     inkscape:cx="50"
+     inkscape:zoom="2"
+     showgrid="false"
+     id="namedview1051"
+     inkscape:window-height="896"
+     inkscape:window-width="1458"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
   <metadata
      id="metadata3024">
     <rdf:RDF>
@@ -16,12 +41,15 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <defs>
-    <style type="text/css"><![CDATA[
+  <defs
+     id="defs1035">
+    <style
+       id="style1033"
+       type="text/css"><![CDATA[
       rect {
         fill: none;
         fill-opacity: 1;
@@ -34,31 +62,38 @@
       }
     ]]></style>
   </defs>
-  <g>
+  <g
+     id="g1047">
     <rect
-       x="0"
-       y="0"
+       style="stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke:#808080;stroke-opacity:1"
+       id="rect1037"
+       height="100"
        width="100"
-       height="100" />
-    <g>
+       y="0"
+       x="0" />
+    <g
+       id="g1045">
       <rect
-         x="0"
-         y="0"
-         width="100"
+         id="rect1039"
+         style="fill: #aaaaaa;"
          height="10"
-         style="fill: #aaaaaa;" />
+         width="100"
+         y="0"
+         x="0" />
       <rect
-         x="0"
+         id="rect1041"
+         style="fill: #aaaaaa;"
+         height="20"
+         width="100"
          y="10"
-         width="100"
-         height="20"
-         style="fill: #aaaaaa;" />
+         x="0" />
       <rect
-         x="0"
-         y="30"
-         width="100"
+         id="rect1043"
+         style="fill: #aaaaaa;"
          height="20"
-         style="fill: #aaaaaa;" />
+         width="100"
+         y="30"
+         x="0" />
     </g>
   </g>
 </svg>

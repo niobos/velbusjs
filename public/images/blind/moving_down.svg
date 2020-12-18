@@ -5,9 +5,34 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   width="100"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (4035a4f, 2020-05-01)"
+   sodipodi:docname="moving_down.svg"
+   id="svg922"
+   version="1.1"
    height="100"
-   version="1.1" >
+   width="100">
+  <sodipodi:namedview
+     inkscape:current-layer="svg922"
+     inkscape:window-maximized="0"
+     inkscape:window-y="23"
+     inkscape:window-x="0"
+     inkscape:cy="50"
+     inkscape:cx="50"
+     inkscape:zoom="5.27"
+     showgrid="false"
+     id="namedview924"
+     inkscape:window-height="865"
+     inkscape:window-width="1386"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
   <metadata
      id="metadata3024">
     <rdf:RDF>
@@ -16,12 +41,15 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <defs>
-    <style type="text/css"><![CDATA[
+  <defs
+     id="defs904">
+    <style
+       id="style902"
+       type="text/css"><![CDATA[
       rect {
         fill: none;
         fill-opacity: 1;
@@ -34,51 +62,60 @@
       }
     ]]></style>
   </defs>
-  <g>
+  <g
+     id="g920">
     <rect
-       x="0"
-       y="0"
+       style="stroke:#808080;stroke-opacity:1;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect906"
+       height="100"
        width="100"
-       height="100" />
-    <g>
+       y="0"
+       x="0" />
+    <g
+       id="g918">
       <animateTransform
-         attributeName="transform"
-         attributeType="XML"
-         type="translate"
-         from="0 -100"
-         to="0 0"
+         repeatCount="indefinite"
          dur="3s"
-         repeatCount="indefinite" />
+         to="0 0"
+         from="0 -100"
+         type="translate"
+         attributeType="XML"
+         attributeName="transform" />
       <rect
-         x="0"
+         id="rect908"
+         style="fill: #aaaaaa;"
+         height="20"
+         width="100"
          y="0"
-         width="100"
-         height="20"
-         style="fill: #aaaaaa;" />
+         x="0" />
       <rect
-         x="0"
+         id="rect910"
+         style="fill: #aaaaaa;"
+         height="20"
+         width="100"
          y="20"
-         width="100"
-         height="20"
-         style="fill: #aaaaaa;" />
+         x="0" />
       <rect
-         x="0"
+         id="rect912"
+         style="fill: #aaaaaa;"
+         height="20"
+         width="100"
          y="40"
-         width="100"
-         height="20"
-         style="fill: #aaaaaa;" />
+         x="0" />
       <rect
-         x="0"
+         id="rect914"
+         style="fill: #aaaaaa;"
+         height="20"
+         width="100"
          y="60"
-         width="100"
-         height="20"
-         style="fill: #aaaaaa;" />
+         x="0" />
       <rect
-         x="0"
-         y="80"
-         width="100"
+         id="rect916"
+         style="fill: #aaaaaa;"
          height="20"
-         style="fill: #aaaaaa;" />
+         width="100"
+         y="80"
+         x="0" />
     </g>
   </g>
 </svg>
