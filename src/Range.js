@@ -40,10 +40,12 @@ class Range extends PureComponent {
     }
 
     render() {
+        const r_min = 'min' in this.props ? this.props.min : 0
+        const r_max = 'max' in this.props ? this.props.max : 100
         return (
             <div style={{display: 'table'}}>
                 <div style={{display: 'table-cell'}}>
-                    <input type="range" min="0" max="100" value={this.state.value}
+                    <input type="range" min={r_min} max={r_max} value={this.state.value}
                            onInput={this.changingDimvalue.bind(this)}
                            onMouseUp={this.changeDimvalue.bind(this)}
                            onTouchEnd={this.changeDimvalue.bind(this)}
