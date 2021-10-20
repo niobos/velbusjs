@@ -8,10 +8,12 @@ import Relay from './Relay.js';
 import Dimmer from './Dimmer.js';
 import Blind from './Blind.js';
 import Input from './Input.js';
+import RelayDali from './RelayDali.js';
 
 
 const control_components = {
     'relay': Relay,
+    'relaydali': RelayDali,
     'dimmer': Dimmer,
     'blind': Blind,
     'input': Input,
